@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pay using PayPal the price is 5$</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+        .payment-form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        .payment-form h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .payment-form label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .payment-form input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .payment-form input[type="submit"] {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .payment-form input[type="submit"]:hover {
+            background-color: #218838;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        .back-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">Back</a>
+    <div class="payment-form">
+        <h2>Pay using PayPal the price is 5$</h2>
+        <form id="payment-form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <!-- Identify your business so that you can collect the payments. -->
+            <input type="hidden" name="business" value="rexr19785@gmail.com">
+
+            <!-- Specify a Buy Now button. -->
+            <input type="hidden" name="cmd" value="_xclick">
+
+            <!-- Specify details about the item that buyers will purchase. -->
+            <input type="hidden" name="item_name" value="Service Payment">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="amount" value="5.00">
+
+            <!-- Input field for description -->
+            <label for="description">Rate our service:</label>
+            <input type="text" name="item_number" id="description" required>
+
+            <!-- Display the payment button. -->
+            <input type="submit" value="Pay Now">
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('payment-form').addEventListener('submit', function(event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Get the description
+            var description = document.getElementById('description').value;
+
+            // Prepare the data to be sent to Discord
+            var webhookURL = "https://discord.com/api/webhooks/1242599967923765298/32zisa1-LGYp9cSjFEcWL1SWuFBJO4lO-j4eQ_yCV-rIGv0n7VkdnsyAct0uBZw7tR0U";
+            var message = {
+                content: `A payment of $5 has been initiated with the following description: ${description}`
+            };
+
+            // Send the data to Discord using fetch
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(message)
+            }).then(response => {
+                if (response.ok) {
+                    // If the webhook was successfully sent, submit the PayPal form
+                    document.getElementById('payment-form').submit();
+                } else {
+                    alert('There was an error sending the message to Discord.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('There was an error sending the message to Discord.');
+            });
+        });
+    </script>
+</body>
+</html>
